@@ -1,0 +1,54 @@
+import fs from "node:fs/promises";
+import puppeteer from "puppeteer-core";
+
+const destination = "/home/ubuntu/alarms_screen_validation";
+await fs.mkdir(destination, { recursive: true });
+const browser = await puppeteer.launch({ executablePath: "/usr/bin/chromium", headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage", "--hide-scrollbars"] });
+const page = await browser.newPage();
+await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 1 });
+await page.goto("http://127.0.0.1:3000/weblct-v200r021-alarms", { waitUntil: "domcontentloaded" });
+const shot = async (name) => page.screenshot({ path: `${destination}/${name}.png` });
+const clickText = async (needle) => {
+  const clicked = await page.evaluate((text) => {
+    const target = [...document.querySelectorAll("button")].find((button) => button.textContent?.trim().includes(text));
+    if (!target) return false;
+    target.click();
+    return true;
+  }, needle);
+  if (!clicked) throw new Error(`Button not found: ${needle}`);
+  await new Promise((resolve) => setTimeout(resolve, 180));
+};
+const heading = async () => page.$eval("h1", (node) => node.textContent?.trim() || "");
+await shot("01-empty-current");
+await clickText("Open Radio Links");
+if ((await heading()) !== "HOP Management") throw new Error("Alarm to HOP navigation failed");
+await shot("02-hop-management");
+await clickText("Microwave Link Performance");
+if ((await heading()) !== "Microwave Link Performance") throw new Error("HOP to performance navigation failed");
+await shot("03-performance");
+await clickText("Browse Current Alarms");
+if ((await heading()) !== "Browse Current Alarms") throw new Error("Performance to alarms navigation failed");
+await clickText("Query");
+await shot("04-current-results");
+const rows = await page.$$eval(".alarm-table tbody tr", (items) => items.length);
+if (rows !== 3) throw new Error(`Expected 3 training alarm rows, got ${rows}`);
+await page.click(".alarm-table tbody tr");
+await shot("05-selected-details");
+const details = await page.$eval(".alarm-detail", (node) => node.textContent || "");
+if (!details.includes("Training decision point")) throw new Error("Alarm detail guidance did not open");
+await page.evaluate(() => {
+  const selects = [...document.querySelectorAll("select")];
+  const severitySelect = selects[1];
+  if (!severitySelect) throw new Error("Severity select not found");
+  severitySelect.value = "Major";
+  severitySelect.dispatchEvent(new Event("change", { bubbles: true }));
+});
+await new Promise((resolve) => setTimeout(resolve, 120));
+await clickText("Query");
+const filtered = await page.$$eval(".alarm-table tbody tr", (items) => items.length);
+if (filtered !== 1) throw new Error(`Expected 1 Major alarm row, got ${filtered}`);
+await shot("06-major-filter");
+await clickText("History");
+await shot("07-history-empty");
+await browser.close();
+console.log(`Saved alarm validation screens to ${destination}`);

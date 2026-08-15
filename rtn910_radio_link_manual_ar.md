@@ -130,3 +130,17 @@
 [2]: https://support.huawei.com/enterprise/en/enterprise-network-microwave/optix-rtn-910-pid-60977 Huawei Support, “OptiX RTN 910 Support Guide, Manuals & PDF.”
 
 [3]: https://pdfcoffee.com/optix-rtn-910-configuration-guidev100r003-pdf-free.html “OptiX RTN 910 Configuration Guide (U2000), V100R003C03, Issue 04.” Secondary hosted copy of a Huawei document; it is used only to corroborate the U2000 workflow and must be matched to the installed release.
+
+## حالة المصادر الرسمية وحدود المطابقة
+
+تم التحقق من صفحة دعم Huawei الخاصة بـ OptiX RTN 910 ومن مقال المعرفة الرسمي EKB0000559092. لم تُستخرج من بوابة الدعم العامة نسخة Configuration Guide أو Commissioning Guide مطابقة لإصدار RTN910V1R1؛ لذلك لا يُقدَّم المرجع الثانوي V100R003C03 على أنه دليل الإصدار الحالي، بل كقرينة على مسار U2000 فقط. أي معاملة غير مذكورة صراحة في المقال الرسمي، ومنها معاملات `radio-cfg-set-if-currmod`، تبقى غير معتمدة ولا تُخمن.
+
+## خطة rollback المقيّدة بالإصدار
+
+1. قبل أي تغيير، احفظ ناتج `cfg-get-phybd` و`cfg-get-board` وأوامر القراءة الخاصة بـ ODU وIF وLink ID، وسجّل قيم البداية في ورقة التغيير.
+2. نفّذ تغييرًا واحدًا فقط في نافذة صيانة معتمدة، ولا تغيّر طرفي الوصلة في وقت واحد. لا تستخدم قيمة المثال المنشورة بدل القيمة الموجودة في ورقة Link Engineering Sheet.
+3. أعد أوامر القراءة بعد التغيير، ثم افحص تطابق الطرفين، حالة ODU، alarms، RSL/الجودة، والخدمة. إذا فشل أي تحقق، أوقف باقي التغييرات.
+4. الاسترجاع يعني إعادة **القيمة السابقة الموثقة فقط** باستخدام صيغة الأمر التي يثبتها مرجع معاملات الإصدار نفسه. إذا لم يثبت المرجع صيغة المعامل أو وحدته، لا تنفذ rollback تخمينيًا؛ اعزل الخدمة وفق خطة الموقع وصعّد الحالة إلى فريق Huawei/مالك الشبكة.
+5. بعد الاسترجاع، أعد جميع أوامر القراءة وسجّل نتيجة post-check، ولا تعلن عودة الوصلة إلا بعد قبول الطرفين والخدمة وفق سجل القبول.
+
+هذا القسم يصف منهج تحكم بالمخاطر، وليس تصريحًا بتنفيذ أوامر على جهاز حقيقي دون مرجع الإصدار وخطة التغيير.
