@@ -5,6 +5,10 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import NavigatorLesson from "./pages/NavigatorLesson";
+import NavigatorDemo from "./pages/NavigatorDemo";
+import TroubleshootingDemo from "./pages/TroubleshootingDemo";
+import PerformanceLab from "./pages/PerformanceLab";
 
 /**
  * Design reminder — Field Control Room: the whole application maintains a precise,
@@ -15,6 +19,10 @@ import Home from "./pages/Home";
 function Router() {
   return (
     <Switch>
+      <Route path={"/performance-lab"} component={PerformanceLab} />
+      <Route path={"/troubleshooting-demo"} component={TroubleshootingDemo} />
+      <Route path={"/navigator-demo"} component={NavigatorDemo} />
+      <Route path={"/navigator"} component={NavigatorLesson} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
