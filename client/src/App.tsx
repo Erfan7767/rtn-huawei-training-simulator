@@ -16,8 +16,8 @@ import WebLctReplica from "./pages/WebLctReplica";
  * operational-console aesthetic with a dark equipment-room base and signal-aqua verification states.
  */
 
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/weblct-v200r021-training"} component={WebLctReplica} />

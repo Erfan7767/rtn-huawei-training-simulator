@@ -28,3 +28,8 @@
 - [x] استخراج لقطات مرجعية عامة لمسار الأداء من فيديو Web LCT المستهدف والصفحات الرسمية المتاحة.
 - [x] فهرسة اللقطات وفق مراحل Browse Alarms وHOP Management وCurrent Performance وHistory Performance.
 - [x] مقارنة اللقطات مع النسخة التدريبية وتحسين العناصر المرئية القابلة للتحقق دون نسخ برنامج أو بيانات تشغيلية.
+
+- [ ] إضافة شاشة Browse Current Alarms مقيدة بإصدار V200R021C10SPC200.
+- [ ] محاكاة جدول الإنذارات مع Current/History وType وSeverity وQuery وSave As وتفاصيل العنصر.
+- [ ] التحقق من التنقل بين شاشة الإنذارات وHOP Management وMicrowave Link Performance.
+- [ ] توثيق أن جميع الإنذارات والنتائج تدريبية وغير حية.
