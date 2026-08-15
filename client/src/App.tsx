@@ -9,6 +9,7 @@ import NavigatorLesson from "./pages/NavigatorLesson";
 import NavigatorDemo from "./pages/NavigatorDemo";
 import TroubleshootingDemo from "./pages/TroubleshootingDemo";
 import PerformanceLab from "./pages/PerformanceLab";
+import WebLctReplica from "./pages/WebLctReplica";
 
 /**
  * Design reminder — Field Control Room: the whole application maintains a precise,
@@ -19,6 +20,7 @@ import PerformanceLab from "./pages/PerformanceLab";
 function Router() {
   return (
     <Switch>
+      <Route path={"/weblct-v200r021-training"} component={WebLctReplica} />
       <Route path={"/performance-lab"} component={PerformanceLab} />
       <Route path={"/troubleshooting-demo"} component={TroubleshootingDemo} />
       <Route path={"/navigator-demo"} component={NavigatorDemo} />
