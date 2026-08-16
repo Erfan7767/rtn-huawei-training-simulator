@@ -2,8 +2,9 @@
 @import "tw-animate-css";
 
 /* Field Control Room: Arabic RTL operational simulator with proof-led panels. */
-html { background: #091117; }
-body { font-family: "IBM Plex Sans Arabic", Arial, sans-serif; min-width: 320px; }
+html { width:100%; min-height:100%; background: #091117; }
+body { width:100%; min-width:320px; min-height:100vh; margin:0; font-family: "IBM Plex Sans Arabic", Arial, sans-serif; }
+#root { width:100%; min-height:100vh; }
 .sim-shell { --ink:#eaf2f4;--muted-ink:#93a4ad;--dim-ink:#637781;--canvas:#091117;--panel:#101b22;--panel-2:#14232c;--line:rgba(211,236,237,.12);--line-strong:rgba(211,236,237,.22);--aqua:#18b69b;--aqua-bright:#51d4bd;--amber:#e4aa52;position:relative;min-height:100vh;overflow:hidden;background:radial-gradient(circle at 22% -5%,rgba(44,115,130,.18),transparent 33rem),#091117;color:var(--ink) }
 .ambient-grid{position:absolute;inset:0;opacity:.36;pointer-events:none;background-image:linear-gradient(rgba(154,208,211,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(154,208,211,.04) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,#000,transparent 84%)}
 .sim-topbar,.mission-strip,.step-rail,.workspace{position:relative;z-index:1}.sim-topbar{min-height:72px;display:flex;align-items:center;justify-content:space-between;padding:13px clamp(18px,3vw,46px);border-bottom:1px solid var(--line);background:rgba(6,13,18,.72);backdrop-filter:blur(18px)}.brand-lockup{display:flex;align-items:center;gap:12px}.brand-mark{width:41px;height:41px;object-fit:contain;filter:drop-shadow(0 0 14px rgba(24,182,155,.32))}.eyebrow,.kicker,.card-label,.nav-caption,.step-number{margin:0;color:var(--aqua-bright);font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase}.brand-lockup h1{margin:1px 0 0;color:#f4f8f7;font-size:18px;font-weight:700;line-height:1.1}
