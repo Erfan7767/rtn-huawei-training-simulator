@@ -66,3 +66,14 @@
 
 [1]: https://e.huawei.com/gr/products/wireless/microwave/traditional-band "Huawei 6–42 GHz Traditional Frequency IP Microwave"
 [2]: https://support.huawei.com/enterprise/en/doc/EDOC1100373532/629c11fe/configuring-lan-interfaces "Huawei Configuring LAN Interfaces"
+
+## بحث Protection 1+1 HSB
+
+تُظهر نتيجة Huawei الرسمية [Change microwave configuration 1+0 and 1+1](https://support.huawei.com/enterprise/en/knowledge/EKB0000488452) أن إجراءات تحويل تكوين مايكروويف قائم من **1+1 HSB** إلى **1+0 non-protection group** تتضمن الاستعلام عن حالة مجموعة الحماية؛ وهي دليل على وجود مفهوم مجموعة حماية واستعلام حالة في سياق RTN، لكنها لا تثبت شاشة Web LCT أو طرازًا وإصدارًا واحدًا لمختبرنا. كما أن مراجع فيديو عامة عن RTN980 1+1 HSB ليست صالحة لنقل واجهة أو قيم إلى RTN950/950A.
+
+لذلك ستبنى الوحدة التالية كـ **Protection 1+1 HSB Concept Lab** فقط: عامل وحماية محليان، مراجعة امتثال المسودة، تحقق نظري من تطابق الطرفين، وحالة تبديل محاكاة داخل المتصفح. لا تستخدم الوحدة أرقام لوحات أو ترددات أو وضع Revertive أو مؤقتات أو قيم عتبة على أنها إعدادات Huawei فعلية؛ إذ تتطلب تلك العناصر دليل الإصدار والطراز أو لقطات مرخّصة مطابقة.
+
+### مراجع الحماية
+
+[3]: https://support.huawei.com/enterprise/en/knowledge/EKB0000488452 "Huawei — Change microwave configuration 1+0 and 1+1"
+[4]: https://www.youtube.com/watch?v=W2dBC9R4mg4 "Huawei RTN 980 1+1 HSB and XPIC Microwave link — Delta Telecom (scope excluded from RTN950/950A UI claims)"
