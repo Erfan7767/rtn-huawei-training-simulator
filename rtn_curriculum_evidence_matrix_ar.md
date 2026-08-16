@@ -62,3 +62,17 @@
 [6] [Adnan Farooq — Huawei RTN playlist](https://youtube.com/playlist?list=PLctvYMZoXdH84zOjYr_wURn8DFswXLDke)
 
 [7] [Telecom Field Operations — Huawei RTN 910/905/980 Link Configuration 1+0](https://www.youtube.com/watch?v=BBMAKFDe9nY)
+
+
+## وحدة E-LAN/VLAN المضافة
+
+أضيفت وحدة `/rtn950-elan-vlan-lab` بوصفها **وحدة تحقق مفاهيمية مقيدة بالمصدر** وليست نسخة مطابقة لشاشة Web LCT خاصة بإصدار غير موثق. تبدأ الوحدة بمراجعة النطاق، ثم تعريف اسم الخدمة والطرفين، ثم إدخال Service VLAN ID وLink Type وDefault VLAN وAllowed VLAN، ثم فحص تدريجي لقواعد المجال والتوافق، ولا تتيح Training Apply إلا بعد زوال الأخطاء.
+
+| قاعدة التحقق | السلوك التدريبي | حدود الدليل |
+|---|---|---|
+| Service VLAN ID | يقبل العدد الصحيح من 1 إلى 4094 ويرفض خارجه | قاعدة VLAN عامة من Huawei، وليست حقلًا مثبتًا في لقطة RTN950A محددة |
+| Link Type | يدعم Access وTrunk، ويفحص العلاقة مع Default/Allowed VLAN | مستند Huawei العام لواجهات LAN، لا يثبت مسار E-LAN في نفس Web LCT |
+| Site A / Site B | يطلب هويتين مختلفتين ويقارن نوع الواجهة وقوائم VLAN | إضافة تدريبية لمحاكاة التوافق، وليست فحصًا لجهاز بعيد |
+| Apply | يُحظر عند الخطأ ويقبل المسودة داخل المتصفح فقط عند النجاح | لا توجد جلسة NE أو عبور حزم أو نتيجة تشغيلية |
+
+تؤكد Huawei أن RTN 950 وRTN 950A يدعمان خدمات Ethernet الأصلية، ومنها E-Line وE-LAN، وأن وظائف Ethernet وIEEE 802.1q/p جزء من عائلة المنتج، بينما لا يثبت المرجع العام شاشة Web LCT أو أسماء الحقول الدقيقة للوحدة الحالية [1]. وتستخدم الوحدة قواعد واجهة LAN العامة كمرجع تحقق مفاهيمي [2]، مع وسم صريح بأن القيم الفعلية يجب أن تأتي من تصميم العميل ودليل الإصدار المطابق.

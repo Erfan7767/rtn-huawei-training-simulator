@@ -12,6 +12,7 @@ describe("source-scoped course roadmap", () => {
     expect(source).toContain("/rtn950a-link-lab");
     expect(source).toContain("/rtn950-ne-attribute-lab");
     expect(source).toContain("/navigator-demo");
+    expect(source).toContain("/rtn950-elan-vlan-lab");
     expect(source).toContain("Physical Link Aggregation");
     expect(source).toContain("Evidence required");
   });

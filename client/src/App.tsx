@@ -16,6 +16,7 @@ import WebLctAlarms2121921 from "./pages/WebLctAlarms2121921";
 import Rtn950aLinkLab from "./pages/Rtn950aLinkLab";
 import Rtn950aSlotLayout from "./pages/Rtn950aSlotLayout";
 import Rtn950NeAttributeLab from "./pages/Rtn950NeAttributeLab";
+import Rtn950ElanVlanLab from "./pages/Rtn950ElanVlanLab";
 
 /**
  * Design reminder — Field Control Room: the whole application maintains a precise,
@@ -33,6 +34,7 @@ function Router() {
       <Route path={"/rtn950a-link-lab"} component={Rtn950aLinkLab} />
       <Route path={"/rtn950a-slot-layout"} component={Rtn950aSlotLayout} />
       <Route path={"/rtn950-ne-attribute-lab"} component={Rtn950NeAttributeLab} />
+      <Route path={"/rtn950-elan-vlan-lab"} component={Rtn950ElanVlanLab} />
       <Route path={"/performance-lab"} component={PerformanceLab} />
       <Route path={"/troubleshooting-demo"} component={TroubleshootingDemo} />
       <Route path={"/navigator-demo"} component={NavigatorDemo} />

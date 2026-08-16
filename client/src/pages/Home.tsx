@@ -110,8 +110,9 @@ const sourceLabs: SourceLab[] = [
   { title: "تكوين وصلة بين موقعين", scope: "RTN950A 2+0 · Link Configuration", description: "فحص الطرفين، مسودة Link، توافق Site A/Site B، تحذير Apply والتحقق المحلي.", href: "/rtn950a-link-lab", state: "ready" },
   { title: "تغيير الهوية وإعادة الدخول", scope: "RTN950 · Web LCT 5.76.07.24", description: "تدريب منفصل على تحذير انقطاع الاتصال ومحاكاة إعادة الدخول، بلا هوية أو NE حية.", href: "/rtn950-ne-attribute-lab", state: "ready" },
   { title: "Navigator للاسترداد المقيد", scope: "RTN910V1R1 · Huawei FAQ", description: "أوامر الفحص والاسترداد المنشورة فقط، منفصلة عن مسار RTN950/950A.", href: "/navigator-demo", state: "ready" },
+  { title: "خدمة E-LAN / VLAN", scope: "RTN950/950A · Concept validation", description: "تحقق تدريجي من الطرفين وVLAN وLink Type قبل Apply محلي؛ لا يثبت عبور الحزم أو صلاحية إنتاجية.", href: "/rtn950-elan-vlan-lab", state: "ready" },
   { title: "Physical Link Aggregation", scope: "مرئي في RTN950A 2+0", description: "مؤجل حتى توثيق لقطات الواجهة الكاملة ونطاق الخدمة للإصدار المطابق.", state: "locked" },
-  { title: "E-LAN / VLAN وخدمات النقل", scope: "مرئي في مصدر منفصل", description: "محجوب حتى تتوفر وثائق خدمة ولقطات مرخصة تمنع خلط RTN950A وRTN380/380AX.", state: "locked" },
+  { title: "خدمات النقل المتقدمة", scope: "E-LAN/VLAN service extensions", description: "محجوبة حتى تتوفر وثائق خدمة ولقطات مرخصة تمنع خلط RTN950A وRTN380/380AX.", state: "locked" },
 ];
 
 const modelInfo = {
