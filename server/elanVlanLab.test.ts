@@ -20,5 +20,7 @@ describe("RTN950 E-LAN/VLAN training lab", () => {
     expect(source).toContain("Allowed VLAN غير متطابق بين الطرفين.");
     expect(source).toContain("Apply محظور");
     expect(source).toContain("لا توجد خدمة أو VLAN حقيقية");
+    expect(source).toContain("FAMILY E-LAN/VLAN CONCEPT LAB");
+    expect(source).not.toContain('href="/rtn950a-link-lab"');
   });
 });
