@@ -28,6 +28,7 @@ import {
   Waves,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import "./HomeLabs.css";
 
 type Step = {
   key: string;
@@ -37,6 +38,14 @@ type Step = {
   helper: string;
   proof: string;
   icon: typeof ScanLine;
+};
+
+type SourceLab = {
+  title: string;
+  scope: string;
+  description: string;
+  href?: string;
+  state: "ready" | "locked";
 };
 
 const steps: Step[] = [
@@ -94,6 +103,15 @@ const steps: Step[] = [
     proof: "المخرج: مشروع ربط موقع «أ» بموقع «ب» قابل للتدقيق.",
     icon: FileCheck2,
   },
+];
+
+const sourceLabs: SourceLab[] = [
+  { title: "تركيب الرف والكروت", scope: "RTN950A 2+0 · Slot Layout", description: "سحب وإفلات ISM6 وODU في منافذ تدريبية مع رفض الإسقاط غير المتوافق.", href: "/rtn950a-slot-layout", state: "ready" },
+  { title: "تكوين وصلة بين موقعين", scope: "RTN950A 2+0 · Link Configuration", description: "فحص الطرفين، مسودة Link، توافق Site A/Site B، تحذير Apply والتحقق المحلي.", href: "/rtn950a-link-lab", state: "ready" },
+  { title: "تغيير الهوية وإعادة الدخول", scope: "RTN950 · Web LCT 5.76.07.24", description: "تدريب منفصل على تحذير انقطاع الاتصال ومحاكاة إعادة الدخول، بلا هوية أو NE حية.", href: "/rtn950-ne-attribute-lab", state: "ready" },
+  { title: "Navigator للاسترداد المقيد", scope: "RTN910V1R1 · Huawei FAQ", description: "أوامر الفحص والاسترداد المنشورة فقط، منفصلة عن مسار RTN950/950A.", href: "/navigator-demo", state: "ready" },
+  { title: "Physical Link Aggregation", scope: "مرئي في RTN950A 2+0", description: "مؤجل حتى توثيق لقطات الواجهة الكاملة ونطاق الخدمة للإصدار المطابق.", state: "locked" },
+  { title: "E-LAN / VLAN وخدمات النقل", scope: "مرئي في مصدر منفصل", description: "محجوب حتى تتوفر وثائق خدمة ولقطات مرخصة تمنع خلط RTN950A وRTN380/380AX.", state: "locked" },
 ];
 
 const modelInfo = {
@@ -289,6 +307,21 @@ export default function Home() {
                 </div>
 
                 <div className="proof-bar"><CheckCircle2 size={16} /><span>{current.proof}</span></div>
+
+                <section className="source-lab-panel" aria-label="المختبرات المتاحة حسب المصدر">
+                  <div className="source-lab-heading"><div><span className="card-label">مسار تعلم مصدرّي</span><h3>المختبرات المتاحة حسب الطراز والإصدار</h3></div><span className="mono">{sourceLabs.filter((lab) => lab.state === "ready").length} READY / {sourceLabs.length} MAPPED</span></div>
+                  <div className="source-lab-grid">
+                    {sourceLabs.map((lab) => lab.href ? (
+                      <a className="source-lab-card ready" href={lab.href} key={lab.title}>
+                        <span><MonitorCog size={16} /> {lab.scope}</span><b>{lab.title}</b><p>{lab.description}</p><em>Open training lab <ArrowLeft size={14} /></em>
+                      </a>
+                    ) : (
+                      <article className="source-lab-card locked" key={lab.title}>
+                        <span><LockKeyhole size={15} /> {lab.scope}</span><b>{lab.title}</b><p>{lab.description}</p><em>Evidence required</em>
+                      </article>
+                    ))}
+                  </div>
+                </section>
               </div>
             </div>
 
