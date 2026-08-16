@@ -45,10 +45,21 @@ describe("RTN950A link configuration training lab", () => {
   it("registers and renders a dedicated interactive RTN950A Slot Layout screen", () => {
     expect(routes).toContain("/rtn950a-slot-layout");
     expect(routes).toContain("component={Rtn950aSlotLayout}");
-    expect(slotLayout).toContain("RTN950A SLOT LAYOUT");
+    expect(slotLayout).toContain("RTN950A SLOT INSTALLATION LAB");
     expect(slotLayout).toContain("1-ISM6-LRTN(P-1)");
     expect(slotLayout).toContain("21-ODU");
     expect(slotLayout).toContain("41-ODU");
     expect(slotLayout).toContain("Collapse Shelf");
+  });
+
+  it("provides a training-only drag-and-drop installation lab with compatible-slot checks", () => {
+    expect(slotLayout).toContain("draggable={!alreadyPlaced}");
+    expect(slotLayout).toContain("onDragStart={(event) => startDrag(event, kind)}");
+    expect(slotLayout).toContain("onDrop={(event) =>");
+    expect(slotLayout).toContain("رفض تدريبي:");
+    expect(slotLayout).toContain("ISM6 Training Card");
+    expect(slotLayout).toContain("ODU 21 Training Module");
+    expect(slotLayout).toContain("ODU 41 Training Module");
+    expect(slotLayout).toContain("Double-click an installed bay to remove it");
   });
 });
