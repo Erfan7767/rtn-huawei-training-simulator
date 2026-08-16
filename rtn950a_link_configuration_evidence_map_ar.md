@@ -27,3 +27,11 @@
 
 1. [Huawei Support, FAQ — How to Configure Basics Parameters for the Microwave Link by Navigator](https://support.huawei.com/enterprise/en/knowledge/EKB0000559092). يثبت أوامر فحص وإعداد أساسية مقيدة بـ RTN910V1R1 عند تعذر WebLCT، ولا يثبت واجهة Web LCT الخاصة بـ RTN950A.
 2. [Configuration of Huawei Microwave link 2+0 ISM6 Card of RTN950A — Delta Telecom](https://www.youtube.com/watch?v=B_e3zePeGWA). مرجع مرئي عام لمسار حقول Web LCT وعمليات Apply/Warning/Verification؛ استُخدم فقط ضمن نطاق RTN950A الظاهر فيه.
+
+## تحديث سيناريو التوافق وتخطيط المنافذ
+
+أضيفت بوابة توافق تدريبية قبل Apply تقارن **IF Channel Bandwidth** و**Modulation profile** و**XPIC state** بين Site A وSite B. يبدأ المختبر عمدًا بحالة عدم تطابق، فيُعطّل Apply ويعرض سبب كل مشكلة وأزرار Match التي توحّد القيمة بين الطرفين. بعد زوال المشكلات يصبح Apply متاحًا، ثم يفتح التحذير التدريبي المعتاد. هذه البوابة ليست ادعاءً بأنها فحص أصلي ظاهر في Web LCT؛ إنها آلية تعليمية صريحة لتدريب التفكير في توافق الطرفين.
+
+أضيفت شاشة مستقلة على `/rtn950a-slot-layout` تعرض Shelf-0 و1-ISM6-LRTN(P-1) و21-ODU و41-ODU وفتحات فارغة تدريبية، مع اختيار عنصر، تفاصيله، طي/فتح الهيكل، وربط عودة إلى Microwave Link Configuration. نطاقها RTN950A 2+0 فقط، وتستند إلى دليل المصدر الذي يذكر ظهور Slot Layout ثم إضافة ISM6 وODU والتحقق الأخضر، من دون ادعاء اكتشاف عتاد أو اتصال حي.
+
+جرى اختبار المتصفح للمسار: رفض Apply عند عدم التوافق، تصحيح Bandwidth/Modulation/XPIC، فتح Apply بعد التطابق، ظهور التحذير، فتح Slot Layout، ثم طي Shelf. نجحت اختبارات المشروع الثمانية وفحص TypeScript.

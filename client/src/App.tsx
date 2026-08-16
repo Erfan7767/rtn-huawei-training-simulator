@@ -14,6 +14,7 @@ import BrowseAlarms from "./pages/BrowseAlarms";
 import WebLctPerformance52121927 from "./pages/WebLctPerformance52121927";
 import WebLctAlarms2121921 from "./pages/WebLctAlarms2121921";
 import Rtn950aLinkLab from "./pages/Rtn950aLinkLab";
+import Rtn950aSlotLayout from "./pages/Rtn950aSlotLayout";
 
 /**
  * Design reminder — Field Control Room: the whole application maintains a precise,
@@ -29,6 +30,7 @@ function Router() {
       <Route path={"/weblct-reference-2121921-alarms"} component={WebLctAlarms2121921} />
       <Route path={"/weblct-reference-52121927"} component={WebLctPerformance52121927} />
       <Route path={"/rtn950a-link-lab"} component={Rtn950aLinkLab} />
+      <Route path={"/rtn950a-slot-layout"} component={Rtn950aSlotLayout} />
       <Route path={"/performance-lab"} component={PerformanceLab} />
       <Route path={"/troubleshooting-demo"} component={TroubleshootingDemo} />
       <Route path={"/navigator-demo"} component={NavigatorDemo} />

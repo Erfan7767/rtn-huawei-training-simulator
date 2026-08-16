@@ -7,6 +7,7 @@ const projectRoot = resolve(import.meta.dirname, "..");
 describe("RTN950A link configuration training lab", () => {
   const source = readFileSync(resolve(projectRoot, "client/src/pages/Rtn950aLinkLab.tsx"), "utf8");
   const routes = readFileSync(resolve(projectRoot, "client/src/App.tsx"), "utf8");
+  const slotLayout = readFileSync(resolve(projectRoot, "client/src/pages/Rtn950aSlotLayout.tsx"), "utf8");
 
   it("keeps the configured workflow scoped to the evidenced RTN950A 2+0 training reference", () => {
     expect(source).toContain("RTN950A 2+0 REFERENCE WORKFLOW");
@@ -32,8 +33,22 @@ describe("RTN950A link configuration training lab", () => {
     expect(source).toContain("Near/far-end comparison recorded");
   });
 
-  it("registers a dedicated route rather than merging the RTN950A lab into another release-scoped replica", () => {
-    expect(routes).toContain("/rtn950a-link-lab");
-    expect(routes).toContain("component={Rtn950aLinkLab}");
+  it("blocks Apply while Site A and Site B are incompatible and exposes guided matching controls", () => {
+    expect(source).toContain("Apply blocked — fix compatibility");
+    expect(source).toContain("TRAINING COMPATIBILITY GATE");
+    expect(source).toContain("تم منع Apply: صحّح توافق Site A وSite B");
+    expect(source).toContain("Match bandwidth");
+    expect(source).toContain("Match modulation");
+    expect(source).toContain("Match XPIC");
+  });
+
+  it("registers and renders a dedicated interactive RTN950A Slot Layout screen", () => {
+    expect(routes).toContain("/rtn950a-slot-layout");
+    expect(routes).toContain("component={Rtn950aSlotLayout}");
+    expect(slotLayout).toContain("RTN950A SLOT LAYOUT");
+    expect(slotLayout).toContain("1-ISM6-LRTN(P-1)");
+    expect(slotLayout).toContain("21-ODU");
+    expect(slotLayout).toContain("41-ODU");
+    expect(slotLayout).toContain("Collapse Shelf");
   });
 });
