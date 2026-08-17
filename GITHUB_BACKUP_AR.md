@@ -1,0 +1,36 @@
+# نسخة GitHub الاحتياطية
+
+المستودع الخاص للمشروع هو: <https://github.com/Erfan7767/rtn-huawei-training-simulator>
+
+> المستودع **خاص**. لا يمكن الوصول إليه إلا من حساب GitHub المالك أو من مستخدمين يُمنحون صلاحية صريحة.
+
+## الاستعادة إلى جهاز جديد
+
+```bash
+git clone https://github.com/Erfan7767/rtn-huawei-training-simulator.git
+cd rtn-huawei-training-simulator
+pnpm install
+pnpm dev
+```
+
+لا تُرفع ملفات البيئة أو أسرار الحساب إلى Git. عند استعادة المشروع داخل بيئة استضافة جديدة، تُضاف أسرار البيئة من لوحة إدارة المنصة الآمنة وليس من المستودع.
+
+## حفظ تغييرات مستقبلية
+
+بعد الانتهاء من تغييرات موثقة واختبارها، يُنشأ checkpoint من منصة المشروع، ثم تُرفع النسخة إلى GitHub:
+
+```bash
+git status
+git add <files>
+git commit -m "وصف واضح للتغيير"
+git push github main
+```
+
+## التحقق من النسخة البعيدة
+
+```bash
+git status -sb
+git ls-remote --heads github main
+```
+
+يجب أن يتطابق معرّف commit المحلي مع مرجع `refs/heads/main` البعيد قبل اعتبار النسخة الاحتياطية مكتملة.
