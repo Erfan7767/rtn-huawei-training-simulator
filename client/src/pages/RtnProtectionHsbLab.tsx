@@ -1,5 +1,9 @@
 import { useMemo, useState } from "react";
 import { AlertTriangle, CheckCircle2, ChevronLeft, ChevronRight, Network, Radio, RotateCcw, ShieldAlert, ShieldCheck, Shuffle, X } from "lucide-react";
+import { useEffect } from "react";
+import { Link } from "wouter";
+import TrainingConsoleBanner from "@/components/TrainingConsoleBanner";
+import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import "./RtnProtectionHsbLab.css";
 
 type Stage = "scope" | "pair" | "validate" | "apply" | "switch";
@@ -16,6 +20,7 @@ const stages: { id: Stage; ar: string; en: string }[] = [
 const initial: { working: Member; protection: Member } = { working: { label: "WORKING-TRAINING-A", role: "Working", group: "HSB-TRAINING-A", scope: "Training service pair A" }, protection: { label: "PROTECTION-TRAINING-B", role: "Working", group: "HSB-TRAINING-A", scope: "Training service pair A" } };
 
 export default function RtnProtectionHsbLab() {
+  const { completeModule } = useTrainingProgress();
   const [stage, setStage] = useState<Stage>("scope");
   const [checks, setChecks] = useState({ source: false, design: false, recovery: false });
   const [mode, setMode] = useState("1+1 HSB");
@@ -52,9 +57,15 @@ export default function RtnProtectionHsbLab() {
     ["Member roles", pair.working.role === "Working" && pair.protection.role === "Protection", "Working + Protection"],
     ["Training scope", pair.working.scope === pair.protection.scope, "نطاق خدمة تدريبي مشترك"],
   ] as const;
+
+  useEffect(() => {
+    if (stage === "switch" && applied) completeModule("protection-hsb");
+  }, [applied, completeModule, stage]);
+
   return <main className="protection-page" dir="ltr">
+    <TrainingConsoleBanner moduleId="protection-hsb" moduleTitle="مختبر مفهوم حماية 1+1 HSB" sourceScope="RTN protection · تحقق مفاهيمي فقط" />
     <div className="protection-disclosure">TRAINING REPLICA · 1+1 HSB CONCEPT LAB · LOCAL STATE ONLY · NO LIVE PROTECTION GROUP</div>
-    <header className="protection-header"><a href="/course-roadmap"><ChevronLeft size={15}/> Course roadmap</a><div><span>✺</span><b>Web LCT</b><em>Protection Configuration Lab</em></div><button onClick={reset} aria-label="Reset protection training"><RotateCcw size={15}/></button></header>
+    <header className="protection-header"><Link href="/course-roadmap"><ChevronLeft size={15}/> Course roadmap</Link><div><span>✺</span><b>Web LCT</b><em>Protection Configuration Lab</em></div><button onClick={reset} aria-label="Reset protection training"><RotateCcw size={15}/></button></header>
     <div className="protection-status"><span>REFERENCE: RTN PROTECTION CONCEPT</span><i/><span>MODE: 1+1 HSB TRAINING</span><i/><span>STATE: OFFLINE / SIMULATED</span><b>{applied ? `LOCAL DRAFT · ${active.toUpperCase()} ACTIVE` : "APPLY BLOCKED UNTIL VALID"}</b></div>
     <section className="protection-shell"><aside className="protection-tree"><b>TRAINING-PROTECTION-NE</b><span>Shelf-0 / Protection training</span><span className="selected">Protection Configuration</span><span>Working member</span><span>Protection member</span><div className="protection-rule"/><div className="protection-source"><ShieldAlert size={15}/><p>المرجع الرسمي يثبت مفهوم 1+1 HSB والاستعلام عن حالة مجموعة الحماية، لا هذه الشاشة أو طرازًا وإصدارًا موحدين. قواعد المقارنة والتبديل هنا تدريبية فقط.</p></div></aside>
       <section className="protection-main" data-testid="protection-hsb-lab" data-active-step={stage}><div className="protection-tabs"><button type="button" disabled title="Separate source scope">Microwave Link Configuration · separate source</button><button className="active">Protection Configuration <X size={12}/></button></div><div className="protection-heading"><div><p>CONCEPT VALIDATION / PROTECTION</p><h1>1+1 HSB Protection Configuration</h1><span>محاكاة للتحقق من مسودة حماية محلية قبل قبول تدريبي، وليست تكوينًا أو تبديلًا للمعدات.</span></div><div className="protection-badge"><ShieldCheck size={17}/><b>Protection concept</b><small>Source-bounded training</small></div></div>

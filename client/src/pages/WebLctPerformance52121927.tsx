@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, CircleHelp, FileDown, RadioTower, Search, X } from "lucide-react";
+import TrainingConsoleBanner from "@/components/TrainingConsoleBanner";
 import "./WebLctPerformance52121927.css";
 
 type View = "current" | "history";
@@ -19,6 +20,7 @@ export default function WebLctPerformance52121927() {
 
   return (
     <main className="lct521-page" dir="ltr">
+      <TrainingConsoleBanner moduleId="performance-reference" moduleTitle="مرجع أداء Microwave Link" sourceScope="NE VERSION 5.212.19.27 · شاشة مستقلة" mode="reference" />
       <div className="lct521-disclosure">TRAINING REPLICA · REFERENCE SCREEN: NE VERSION 5.212.19.27 · NO LIVE NE CONNECTION</div>
       <header className="lct521-header">
         <div className="lct521-wordmark"><span className="lct521-orb">◉</span><strong>Web LCT</strong></div>

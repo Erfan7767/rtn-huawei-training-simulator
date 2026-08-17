@@ -3,6 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { TrainingProgressProvider } from "./contexts/TrainingProgressContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import NavigatorLesson from "./pages/NavigatorLesson";
@@ -42,7 +43,7 @@ function Router() {
       <Route path={"/navigator-demo"} component={NavigatorDemo} />
       <Route path={"/navigator"} component={NavigatorLesson} />
       <Route path={"/course-roadmap"} component={Home} />
-      <Route path={"/"} component={WebLctPerformance52121927} />
+      <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -62,10 +63,12 @@ function App() {
         defaultTheme="dark"
         // switchable
       >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+        <TrainingProgressProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </TrainingProgressProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

@@ -1,5 +1,9 @@
 import { CheckCircle2, ChevronDown, ChevronLeft, FileWarning, Radio, RotateCcw, Server, ShieldAlert } from "lucide-react";
 import { useMemo, useState, type DragEvent } from "react";
+import { useEffect } from "react";
+import { Link } from "wouter";
+import TrainingConsoleBanner from "@/components/TrainingConsoleBanner";
+import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import "./Rtn950aSlotLayout.css";
 
 type CardKind = "ism6" | "odu21" | "odu41";
@@ -20,6 +24,7 @@ const slotDefinitions: { id: string; number: string; expected: string; accepts: 
 ];
 
 export default function Rtn950aSlotLayout() {
+  const { completeModule } = useTrainingProgress();
   const [placements, setPlacements] = useState<Placement>({ "slot-1": null, "slot-21": null, "slot-41": null, "slot-2": null, "slot-3": null });
   const [selectedCard, setSelectedCard] = useState<CardKind | null>(null);
   const [draggingCard, setDraggingCard] = useState<CardKind | null>(null);
@@ -30,6 +35,10 @@ export default function Rtn950aSlotLayout() {
   const installedCount = Object.values(placements).filter(Boolean).length;
   const allInstalled = ["slot-1", "slot-21", "slot-41"].every((slotId) => placements[slotId]);
   const selectedDetail = useMemo(() => selectedCard ? cardCatalog[selectedCard] : null, [selectedCard]);
+
+  useEffect(() => {
+    if (allInstalled) completeModule("slot-layout");
+  }, [allInstalled, completeModule]);
 
   const startDrag = (event: DragEvent<HTMLElement>, kind: CardKind) => {
     event.dataTransfer.setData("text/plain", kind);
@@ -73,13 +82,14 @@ export default function Rtn950aSlotLayout() {
   };
 
   return <main className="slot-page" dir="ltr">
+    <TrainingConsoleBanner moduleId="slot-layout" moduleTitle="مختبر تركيب رف RTN950A" sourceScope="RTN950A 2+0 · منطق منافذ تدريبي" />
     <div className="slot-disclosure">TRAINING REPLICA · RTN950A SLOT INSTALLATION LAB · NO LIVE NE / NO DEVICE WRITE</div>
-    <header className="slot-header"><a href="/rtn950a-link-lab" className="slot-back"><ChevronLeft size={15}/> Microwave Link Configuration</a><div className="slot-brand"><span>✺</span><b>Web LCT</b><em>Slot Layout · RTN950A Training</em></div><div className="slot-actions"><button aria-label="Reset training shelf" onClick={resetLab}><RotateCcw size={15}/></button></div></header>
+    <header className="slot-header"><Link href="/rtn950a-link-lab" className="slot-back"><ChevronLeft size={15}/> Microwave Link Configuration</Link><div className="slot-brand"><span>✺</span><b>Web LCT</b><em>Slot Layout · RTN950A Training</em></div><div className="slot-actions"><button aria-label="Reset training shelf" onClick={resetLab}><RotateCcw size={15}/></button></div></header>
     <div className="slot-status"><span>NE NAME: RTN950A-TRAINING-NE</span><i/><span>DEVICE TYPE: RTN950A</span><i/><span>NE STATE: OFFLINE / SIMULATED</span><b>{installedCount}/3 TRAINING CARDS INSTALLED</b></div>
     <section className="slot-shell">
       <aside className="slot-tree"><section className="slot-tree-head"><b><ChevronDown size={12}/> RTN950A-TRAINING-NE</b><span><ChevronDown size={12}/> Shelf-0 (training)</span></section><section className="slot-tree-list">{slotDefinitions.map((slot) => <button key={slot.id} className={placements[slot.id] ? "installed" : ""} onClick={() => attemptPlace(slot.id)}><span className={`slot-dot ${placements[slot.id] ? "odu" : "empty"}`}/>{placements[slot.id] ? cardCatalog[placements[slot.id]!].hardwareLabel : `${slot.number}-Empty`}<small>{placements[slot.id] ? "Training installed" : slot.expected}</small></button>)}</section><div className="slot-source"><FileWarning size={15}/><p>المصدر العام يثبت Slot Layout وظهور ISM6 وODU ضمن مسار RTN950A 2+0. قواعد قبول المنفذ في هذه الشاشة تدريبية صريحة وليست فحصًا حيًا من Huawei.</p></div></aside>
       <section className="slot-main" data-testid="slot-install-lab">
-        <div className="slot-tabs"><button className="active">Slot Layout</button><a href="/rtn950a-link-lab">Microwave Link Configuration</a><button>Physical Link Aggregation</button></div>
+        <div className="slot-tabs"><button className="active">Slot Layout</button><Link href="/rtn950a-link-lab">Microwave Link Configuration</Link><button>Physical Link Aggregation</button></div>
         <div className="slot-heading"><div><p>NE EXPLORER / SLOT LAYOUT</p><h1>Slot Installation Lab</h1><span>ركّب الكروت في المنافذ التدريبية بالسحب والإفلات أو بالاختيار ثم النقر.</span></div><div className="slot-scope"><Server size={17}/><b>RTN950A 2+0</b><small>Training Profile</small></div></div>
         <section className="slot-catalog" aria-label="Training card catalog"><div><span>TRAINING CARD CATALOG</span><b>اسحب كرتًا أو حدده</b></div><div className="slot-card-list">{(Object.keys(cardCatalog) as CardKind[]).map((kind) => { const item = cardCatalog[kind]; const Icon = item.Icon; const alreadyPlaced = Object.values(placements).includes(kind); return <button key={kind} data-card-kind={kind} className={`slot-card ${selectedCard === kind ? "selected" : ""} ${alreadyPlaced ? "placed" : ""}`} draggable={!alreadyPlaced} onDragStart={(event) => startDrag(event, kind)} onDragEnd={() => { setDraggingCard(null); setHoveredSlot(null); }} onClick={() => { if (!alreadyPlaced) { setSelectedCard(kind); setFeedback(`اختير ${item.hardwareLabel}. اسحبه أو انقر منفذًا متوافقًا.`); } }} disabled={alreadyPlaced}><Icon size={19}/><span><b>{item.label}</b><small>{item.hardwareLabel} · {item.detail}</small></span><em>{alreadyPlaced ? "Installed" : "Drag"}</em></button>; })}</div></section>
         <div className="slot-toolbar"><button onClick={() => setExpanded((value) => !value)}><ChevronDown size={14}/> {expanded ? "Collapse Shelf" : "Expand Shelf"}</button><span><Radio size={14}/> {installedCount} installed in training draft</span></div>

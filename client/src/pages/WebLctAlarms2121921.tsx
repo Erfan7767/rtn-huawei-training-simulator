@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, ChevronRight, CircleHelp, FileDown, Filter, Printer, X } from "lucide-react";
+import TrainingConsoleBanner from "@/components/TrainingConsoleBanner";
 import "./WebLctAlarms2121921.css";
 
 type TrainingAlarm = { severity: "Major" | "Critical" | "Minor"; name: string; object: string; rising: string; type: string; description: string; causes: string[] };
@@ -16,6 +17,7 @@ export default function WebLctAlarms2121921() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [showLatest, setShowLatest] = useState(true);
   return <main className="lct551-page" dir="ltr">
+    <TrainingConsoleBanner moduleId="alarms-reference" moduleTitle="مرجع Browse Current Alarms" sourceScope="NE VERSION 212.19.21 · شاشة مستقلة" mode="reference" />
     <div className="lct551-disclosure">TRAINING REPLICA · REFERENCE SCREEN: NE VERSION 212.19.21 · SYNTHETIC ALARMS ONLY</div>
     <header className="lct551-header"><div className="lct551-wordmark"><span className="lct551-flower">✺</span><strong>Web LCT</strong></div><div className="lct551-tools"><button>▣</button><button>☷</button><button><CircleHelp size={16} /></button><button><X size={16} /></button></div></header>
     <div className="lct551-status"><span>NE NAME: TRAINING-ALARM-NE</span><i/> <span>REFERENCE NE VERSION: 212.19.21</span><i/> <span>CURRENT USER: training</span><i/> <span>NE STATE: RUNNING — SIMULATED</span><div className="lct551-counts"><b className="red">—</b><b className="orange">—</b><b className="yellow">—</b><b className="blue">—</b><b className="cyan">—</b></div></div>

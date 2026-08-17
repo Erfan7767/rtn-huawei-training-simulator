@@ -1,5 +1,9 @@
 import { useMemo, useState } from "react";
 import { AlertTriangle, CheckCircle2, ChevronDown, ChevronRight, CircleHelp, ClipboardCheck, FileWarning, Network, Radio, RotateCcw, ShieldAlert, X } from "lucide-react";
+import { useEffect } from "react";
+import { Link } from "wouter";
+import TrainingConsoleBanner from "@/components/TrainingConsoleBanner";
+import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import "./Rtn950aLinkLab.css";
 
 type LabStep = "precheck" | "add" | "basic" | "rf" | "confirm" | "applied" | "verify";
@@ -25,6 +29,7 @@ const labLogLabels: Record<LabStep, string> = {
 };
 
 export default function Rtn950aLinkLab() {
+  const { completeModule } = useTrainingProgress();
   const [step, setStep] = useState<LabStep>("precheck");
   const [ready, setReady] = useState({ inventory: false, design: false, remote: false });
   const [endpoints, setEndpoints] = useState({ siteA: "", siteB: "" });
@@ -42,6 +47,10 @@ export default function Rtn950aLinkLab() {
   const allReady = ready.inventory && ready.design && ready.remote && endpoints.siteA.trim().length > 0 && endpoints.siteB.trim().length > 0;
   const allVerified = verify.visual && verify.remote && verify.record;
   const stepLog = useMemo(() => stepMeta.slice(0, currentIndex + 1).map((item) => ({ ...item, message: item.id === step ? labLogLabels[item.id] : "تمت هذه المرحلة في المختبر التدريبي." })), [currentIndex, step]);
+
+  useEffect(() => {
+    if (allVerified) completeModule("link-configuration");
+  }, [allVerified, completeModule]);
 
   const selectStep = (target: LabStep) => {
     const targetIndex = stepMeta.findIndex((item) => item.id === target);
@@ -78,13 +87,14 @@ export default function Rtn950aLinkLab() {
   };
 
   return <main className="rtnlab-page" dir="ltr">
+    <TrainingConsoleBanner moduleId="link-configuration" moduleTitle="مختبر ربط RTN950A ثنائي الموقع" sourceScope="RTN950A 2+0 · مرجع تدريبي مقيد" />
     <div className="rtnlab-disclosure">TRAINING REPLICA · RTN950A 2+0 REFERENCE WORKFLOW · NO LIVE NE / NO DEVICE WRITE</div>
     <header className="rtnlab-header"><div className="rtnlab-wordmark"><span>✺</span><b>Web LCT</b><em>Microwave Link Configuration Training Lab</em></div><div className="rtnlab-icons"><button aria-label="Help"><CircleHelp size={16}/></button><button aria-label="Close"><X size={16}/></button></div></header>
     <div className="rtnlab-status"><span>NE NAME: RTN950A-TRAINING-NE</span><i/><span>DEVICE TYPE: RTN950A — REFERENCE SCOPE</span><i/><span>NE STATE: OFFLINE / SIMULATED</span><span className="rtnlab-state"><b className={applied ? "online" : ""}/>{applied ? "TRAINING RESULT: SUCCESS" : "DRAFT: NOT APPLIED"}</span></div>
     <section className="rtnlab-shell">
       <aside className="rtnlab-tree"><section className="rtnlab-ne-tree"><b><ChevronDown size={12}/> RTN950A-TRAINING-NE</b><span><ChevronDown size={12}/> Shelf-0 (training)</span><span className={linkAdded ? "installed" : ""}>1-ISM6-LRTN(P-1)</span><span className={applied ? "installed" : ""}>21-ODU</span><span className={applied ? "installed" : ""}>41-ODU</span></section><div className="rtnlab-rule"/><section className="rtnlab-function-tree"><b>Function Tree</b><span><ChevronDown size={12}/> Configuration</span><button className="selected"><Network size={13}/> Microwave Link Configuration</button><button><ChevronRight size={12}/> Physical Link Aggregation</button><button><ChevronRight size={12}/> Ethernet Service</button><button><ChevronRight size={12}/> DCN Management</button><button><ChevronRight size={12}/> Fault</button><button><ChevronRight size={12}/> Performance</button></section><div className="rtnlab-source-card"><FileWarning size={15}/><p>المرجع البصري: RTN950A 2+0، تسلسل Web LCT عام. لا يُعمم على RTN910 أو إصدار آخر.</p></div></aside>
       <section className="rtnlab-main">
-        <div className="rtnlab-tabs"><a href="/rtn950a-slot-layout">Slot Layout</a><button className="active">Microwave Link Configuration <X size={12}/></button><button>Physical Link Aggregation</button></div>
+        <div className="rtnlab-tabs"><Link href="/rtn950a-slot-layout">Slot Layout</Link><button className="active">Microwave Link Configuration <X size={12}/></button><button>Physical Link Aggregation</button></div>
         <div className="rtnlab-heading"><div><p>CONFIGURATION / MICROWAVE LINK CONFIGURATION</p><h1>Microwave Link Configuration</h1><span>مختبر عربي تدريبي: أدخل وراجع ثم نفّذ محاكاة آمنة لخطوات الإعداد المرئية.</span></div><button className="rtnlab-reset" onClick={rollback}><RotateCcw size={14}/> Rollback training draft</button></div>
         <nav className="rtnlab-steps" aria-label="خطوات المختبر">{stepMeta.map((item, index) => <button key={item.id} className={`${index === currentIndex ? "current" : ""} ${index < currentIndex ? "complete" : ""}`} onClick={() => selectStep(item.id)}><b>{index < currentIndex ? <CheckCircle2 size={15}/> : item.number}</b><span>{item.arabic}<small>{item.english}</small></span></button>)}</nav>
         <div className="rtnlab-feedback"><ShieldAlert size={16}/><span>{feedback}</span></div>

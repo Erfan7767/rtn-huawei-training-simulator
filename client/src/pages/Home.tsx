@@ -3,7 +3,7 @@
  * proof-led actions, and signal-aqua verification. This is deliberately a training simulation,
  * not a claim to reproduce Huawei's original software.
  */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -28,6 +28,8 @@ import {
   Waves,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
+import { type TrainingModuleId, useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import "./HomeLabs.css";
 
 type Step = {
@@ -116,6 +118,15 @@ const sourceLabs: SourceLab[] = [
   { title: "خدمات النقل المتقدمة", scope: "E-LAN/VLAN service extensions", description: "محجوبة حتى تتوفر وثائق خدمة ولقطات مرخصة تمنع خلط RTN950A وRTN380/380AX.", state: "locked" },
 ];
 
+const moduleByPath: Record<string, TrainingModuleId> = {
+  "/rtn950a-slot-layout": "slot-layout",
+  "/rtn950a-link-lab": "link-configuration",
+  "/rtn950-ne-attribute-lab": "ne-attribute",
+  "/navigator-demo": "navigator",
+  "/rtn950-elan-vlan-lab": "elan-vlan",
+  "/protection-hsb-lab": "protection-hsb",
+};
+
 const modelInfo = {
   "RTN 910": {
     release: "يلزم تأكيد إصدار الجهاز",
@@ -128,17 +139,23 @@ const modelInfo = {
 };
 
 export default function Home() {
-  const initialStep = Math.min(
-    Math.max(Number(new URLSearchParams(window.location.search).get("step") ?? 0) || 0, 0),
-    steps.length - 1,
-  );
-  const [activeStep, setActiveStep] = useState(initialStep);
+  const { completed, visited, visitModule } = useTrainingProgress();
+  const [activeStep, setActiveStep] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    return Math.min(Math.max(Number(new URLSearchParams(window.location.search).get("step") ?? 0) || 0, 0), steps.length - 1);
+  });
   const [model, setModel] = useState<keyof typeof modelInfo>("RTN 910");
   const [checked, setChecked] = useState<string[]>([]);
   const current = steps[activeStep];
   const CurrentIcon = current.icon;
   const verifiedCount = checked.length;
   const progress = Math.round((activeStep / (steps.length - 1)) * 100);
+  const readyLabs = sourceLabs.filter((lab) => lab.state === "ready");
+  const openedReadyLabs = readyLabs.filter((lab) => lab.href && visited.includes(moduleByPath[lab.href])).length;
+
+  useEffect(() => {
+    visitModule("course-roadmap");
+  }, [visitModule]);
 
   const checkItems = useMemo(
     () => [
@@ -170,7 +187,7 @@ export default function Home() {
         <div className="topbar-status" aria-label="حالة المحاكاة">
           <span className="status-chip simulation"><MonitorCog size={15} /> محاكاة تعليمية</span>
           <span className="status-chip"><LockKeyhole size={14} /> دون شبكة إنتاج</span>
-          <span className="status-chip healthy"><CheckCircle2 size={15} /> سياق المهمة محفوظ</span>
+          <span className="status-chip healthy"><CheckCircle2 size={15} /> {completed.length} تدريب محلي مكتمل</span>
         </div>
       </header>
 
@@ -311,12 +328,12 @@ export default function Home() {
                 <div className="proof-bar"><CheckCircle2 size={16} /><span>{current.proof}</span></div>
 
                 <section className="source-lab-panel" aria-label="المختبرات المتاحة حسب المصدر">
-                  <div className="source-lab-heading"><div><span className="card-label">مسار تعلم مصدرّي</span><h3>المختبرات المتاحة حسب الطراز والإصدار</h3></div><span className="mono">{sourceLabs.filter((lab) => lab.state === "ready").length} READY / {sourceLabs.length} MAPPED</span></div>
+                  <div className="source-lab-heading"><div><span className="card-label">مسار تعلم مصدرّي</span><h3>المختبرات المتاحة حسب الطراز والإصدار</h3></div><span className="mono">{openedReadyLabs}/{readyLabs.length} OPENED · {completed.length} LOCAL COMPLETE</span></div>
                   <div className="source-lab-grid">
                     {sourceLabs.map((lab) => lab.href ? (
-                      <a className="source-lab-card ready" href={lab.href} key={lab.title}>
+                      <Link className="source-lab-card ready" href={lab.href} key={lab.title}>
                         <span><MonitorCog size={16} /> {lab.scope}</span><b>{lab.title}</b><p>{lab.description}</p><em>Open training lab <ArrowLeft size={14} /></em>
-                      </a>
+                      </Link>
                     ) : (
                       <article className="source-lab-card locked" key={lab.title}>
                         <span><LockKeyhole size={15} /> {lab.scope}</span><b>{lab.title}</b><p>{lab.description}</p><em>Evidence required</em>

@@ -1,5 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, CheckCircle2, ChevronLeft, ChevronRight, FileWarning, Network, RotateCcw, ShieldAlert, X } from "lucide-react";
+import { Link } from "wouter";
+import TrainingConsoleBanner from "@/components/TrainingConsoleBanner";
+import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import "./Rtn950ElanVlanLab.css";
 
 type Stage = "scope" | "endpoints" | "vlan" | "validate" | "apply";
@@ -13,6 +16,7 @@ const initial: { a: Endpoint; b: Endpoint } = {
 };
 
 export default function Rtn950ElanVlanLab() {
+  const { completeModule } = useTrainingProgress();
   const [stage, setStage] = useState<Stage>("scope");
   const [checked, setChecked] = useState({ source: false, design: false, service: false });
   const [service, setService] = useState("ELAN-TRAINING-01");
@@ -51,9 +55,15 @@ export default function Rtn950ElanVlanLab() {
   const checkRows = [
     ["Service identity", service.trim().length > 0, "اسم الخدمة غير فارغ"], ["VLAN range", /^\d+$/.test(vlan) && Number(vlan) >= 1 && Number(vlan) <= 4094, "VLAN ID ضمن 1–4094"], ["Endpoint names", endpoints.a.name.trim() !== endpoints.b.name.trim() && endpoints.a.name.trim() !== "" && endpoints.b.name.trim() !== "", "هوية الطرفين مختلفة ومكتملة"], ["Link type", endpoints.a.linkType === endpoints.b.linkType, "Link Type متطابق"], ["Default VLAN", endpoints.a.defaultVlan === endpoints.b.defaultVlan, "Default VLAN متطابق"], ["Allowed VLAN", endpoints.a.allowedVlan.replace(/\s/g, "") === endpoints.b.allowedVlan.replace(/\s/g, ""), "Allowed VLAN متطابق"], ["Service membership", errors.filter((error) => error.includes("Allowed VLAN") || error.includes("VLAN الخدمة")).length === 0, "VLAN الخدمة عضو في قائمة السماح للطرفين"],
   ] as const;
+
+  useEffect(() => {
+    if (applied) completeModule("elan-vlan");
+  }, [applied, completeModule]);
+
   return <main className="elan-page" dir="ltr">
+    <TrainingConsoleBanner moduleId="elan-vlan" moduleTitle="تحقق مفاهيم E-LAN/VLAN" sourceScope="RTN950/950A · تحقق مفاهيمي فقط" />
     <div className="elan-disclosure">TRAINING REPLICA · RTN950 / RTN950A FAMILY E-LAN/VLAN CONCEPT LAB · NO LIVE SERVICE / NO DEVICE WRITE</div>
-    <header className="elan-header"><a href="/course-roadmap"><ChevronLeft size={15}/> Course roadmap</a><div><span>✺</span><b>Web LCT</b><em>E-LAN / VLAN Training Lab</em></div><button onClick={reset} aria-label="Reset E-LAN VLAN training"><RotateCcw size={15}/></button></header>
+    <header className="elan-header"><Link href="/course-roadmap"><ChevronLeft size={15}/> Course roadmap</Link><div><span>✺</span><b>Web LCT</b><em>E-LAN / VLAN Training Lab</em></div><button onClick={reset} aria-label="Reset E-LAN VLAN training"><RotateCcw size={15}/></button></header>
     <div className="elan-status"><span>REFERENCE FAMILY: RTN 950 / RTN 950A</span><i/><span>SERVICE SCOPE: E-LAN / VLAN CONCEPTS</span><i/><span>STATE: OFFLINE / SIMULATED</span><b>{applied ? "LOCAL DRAFT APPLIED" : "APPLY BLOCKED UNTIL VALID"}</b></div>
     <section className="elan-shell"><aside className="elan-tree"><b>RTN950-TRAINING-NE</b><span>Shelf-0 / Service training</span><span className="selected">E-LAN / VLAN</span><span>Ethernet Interfaces</span><span>Microwave Link</span><div className="elan-rule"/><div className="elan-source"><FileWarning size={15}/><p>المراجع العامة تثبت دعم E-LAN وIEEE 802.1q/p في عائلة RTN، بينما تسلسل Web LCT الخاص بالإصدار يحتاج دليلًا أو لقطة مطابقة. لذلك هذه الوحدة تحقق مفاهيم عامة فقط.</p></div></aside>
       <section className="elan-main" data-testid="elan-vlan-lab" data-active-step={stage}><div className="elan-tabs"><button type="button" disabled title="Separate source scope">Microwave Link Configuration · separate source</button><button className="active">E-LAN / VLAN <X size={12}/></button></div><div className="elan-heading"><div><p>CONCEPT VALIDATION / E-LAN / VLAN</p><h1>E-LAN / VLAN Service Validation</h1><span>وحدة تدريبية تراجع الإعداد خطوة بخطوة قبل السماح بتطبيق محلي.</span></div><div className="elan-badge"><Network size={17}/><b>Training service</b><small>Source-bounded concepts</small></div></div>

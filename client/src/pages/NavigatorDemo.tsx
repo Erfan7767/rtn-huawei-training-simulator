@@ -4,6 +4,8 @@
  */
 import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, ArrowLeft, ChevronLeft, ChevronRight, CircleCheck, CirclePlay, DatabaseZap, MousePointer2, Pause, Play, ShieldAlert, Terminal, TimerReset } from "lucide-react";
+import { useLocation } from "wouter";
+import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import "./NavigatorDemo.css";
 
 type DemoCommand = { command: string; objective: string; operation: "READ" | "WRITE"; output: string[] };
@@ -48,7 +50,9 @@ const lessonData: Lesson[] = [
 const FRAMES_PER_COMMAND = 100;
 
 export default function NavigatorDemo() {
-  const params = useMemo(() => new URLSearchParams(window.location.search), []);
+  const [, setLocation] = useLocation();
+  const { completeModule, visitModule } = useTrainingProgress();
+  const params = useMemo(() => new URLSearchParams(typeof window === "undefined" ? "" : window.location.search), []);
   const requestedLesson = Math.min(Math.max(Number(params.get("lesson") ?? 1), 1), lessonData.length);
   const fixedFrame = params.get("frame");
   const [lessonId, setLessonId] = useState(requestedLesson);
@@ -75,9 +79,17 @@ export default function NavigatorDemo() {
     setPlaying(false);
   }, [lessonId]);
 
+  useEffect(() => {
+    visitModule("navigator");
+  }, [visitModule]);
+
+  useEffect(() => {
+    if (activeFrame >= totalFrames) completeModule("navigator");
+  }, [activeFrame, completeModule, totalFrames]);
+
   const selectLesson = (value: number) => {
     if (fixedFrame !== null) {
-      window.location.href = `/navigator-demo?lesson=${value}&frame=0`;
+      setLocation(`/navigator-demo?lesson=${value}&frame=0`);
       return;
     }
     setLessonId(value);

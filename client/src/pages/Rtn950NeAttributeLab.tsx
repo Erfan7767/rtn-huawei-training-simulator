@@ -1,5 +1,9 @@
 import { AlertTriangle, CheckCircle2, ChevronLeft, ChevronRight, ClipboardCheck, FileWarning, LogIn, Radio, RotateCcw, ShieldAlert, X } from "lucide-react";
 import { useState } from "react";
+import { useEffect } from "react";
+import { Link } from "wouter";
+import TrainingConsoleBanner from "@/components/TrainingConsoleBanner";
+import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import "./Rtn950NeAttributeLab.css";
 
 type AttributeStep = "review" | "draft" | "risk" | "relogin" | "verified";
@@ -13,6 +17,7 @@ const steps: { id: AttributeStep; arabic: string; english: string }[] = [
 ];
 
 export default function Rtn950NeAttributeLab() {
+  const { completeModule } = useTrainingProgress();
   const [step, setStep] = useState<AttributeStep>("review");
   const [checks, setChecks] = useState({ record: false, window: false, plan: false });
   const [draft, setDraft] = useState({ label: "RTN950-TRAINING-NE", id: "TRAINING-ID-B" });
@@ -22,6 +27,10 @@ export default function Rtn950NeAttributeLab() {
   const [feedback, setFeedback] = useState("ابدأ بمراجعة نطاق التغيير. لا توجد جلسة NE أو اتصال إدارة في هذا المختبر.");
   const stepIndex = steps.findIndex((item) => item.id === step);
   const allChecked = checks.record && checks.window && checks.plan;
+
+  useEffect(() => {
+    if (verified) completeModule("ne-attribute");
+  }, [completeModule, verified]);
 
   const reset = () => {
     setStep("review"); setChecks({ record: false, window: false, plan: false }); setDraft({ label: "RTN950-TRAINING-NE", id: "TRAINING-ID-B" }); setRiskOpen(false); setApplied(false); setVerified(false); setFeedback("أُعيد تعيين المسودة التدريبية محليًا. لم تتغير هوية NE أو جلسة حية.");
@@ -40,8 +49,9 @@ export default function Rtn950NeAttributeLab() {
   const relogin = () => { setStep("verified"); setFeedback("تمت محاكاة إعادة الدخول إلى NE التدريبية. راجع السجل المحلي قبل إغلاق السيناريو."); };
 
   return <main className="neattr-page" dir="ltr">
+    <TrainingConsoleBanner moduleId="ne-attribute" moduleTitle="تغيير هوية RTN950 وإعادة الدخول" sourceScope="RTN950 · Web LCT 5.76.07.24" />
     <div className="neattr-disclosure">TRAINING REPLICA · RTN950 NE ATTRIBUTE WORKFLOW · REFERENCE UI: NE VERSION 5.76.07.24 · NO LIVE NE</div>
-    <header className="neattr-header"><a href="/course-roadmap"><ChevronLeft size={15}/> Course roadmap</a><div><span>✺</span><b>Web LCT</b><em>NE Attribute Training Lab</em></div><button onClick={reset} aria-label="Reset NE Attribute training draft"><RotateCcw size={15}/></button></header>
+    <header className="neattr-header"><Link href="/course-roadmap"><ChevronLeft size={15}/> Course roadmap</Link><div><span>✺</span><b>Web LCT</b><em>NE Attribute Training Lab</em></div><button onClick={reset} aria-label="Reset NE Attribute training draft"><RotateCcw size={15}/></button></header>
     <div className="neattr-status"><span>REFERENCE DEVICE: RTN 950</span><i/><span>REFERENCE UI: iManager U2000 Web LCT</span><i/><span>NE VERSION: 5.76.07.24</span><i/><span>NE STATE: OFFLINE / SIMULATED</span><b>{applied ? "LOCAL DRAFT APPLIED" : "NO LIVE CHANGE"}</b></div>
     <section className="neattr-shell">
       <aside className="neattr-tree"><div className="neattr-ne"><b>RTN950-TRAINING-NE</b><span>NE Explorer (training)</span><span>Slot Layout</span></div><div className="neattr-rule"/><div className="neattr-function"><b>Function Tree</b><span>Configuration</span><button className="selected">NE Attribute</button><button>Microwave Link Configuration</button><button>Alarm</button><button>Performance</button></div><div className="neattr-source"><FileWarning size={15}/><p>المصدر المرئي RTN950 فقط، Web LCT 5.76.07.24، ويظهر صفحة NE Attribute ثم تحذير تغير الاتصال وإعادة الدخول. هذه الشاشة لا تمثل RTN950A 2+0.</p></div></aside>
